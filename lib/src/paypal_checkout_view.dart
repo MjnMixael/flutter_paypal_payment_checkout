@@ -7,10 +7,11 @@ import 'package:flutter_paypal_payment/src/paypal_service.dart';
 class PaypalCheckoutView extends StatefulWidget {
   final Function onSuccess, onCancel, onError;
   final String? note, clientId, secretKey;
-
+  final String returnURL, cancelURL;
   final Widget? loadingIndicator;
   final List? transactions;
   final bool? sandboxMode;
+  
   const PaypalCheckoutView({
     Key? key,
     required this.onSuccess,
@@ -19,6 +20,8 @@ class PaypalCheckoutView extends StatefulWidget {
     required this.transactions,
     required this.clientId,
     required this.secretKey,
+    required this.returnURL,
+    required this.cancelURL,
     this.sandboxMode = false,
     this.note = '',
     this.loadingIndicator,
@@ -41,9 +44,8 @@ class PaypalCheckoutViewState extends State<PaypalCheckoutView> {
   late PaypalServices services;
   int pressed = 0;
   double progress = 0;
-  final String returnURL =
-      'https://www.youtube.com/channel/UC9a1yj1xV2zeyiFPZ1gGYGw';
-  final String cancelURL = 'https://www.facebook.com/tharwat.samy.9';
+  late String returnURL;
+  late String cancelURL;
 
   late InAppWebViewController webView;
 
@@ -60,6 +62,9 @@ class PaypalCheckoutViewState extends State<PaypalCheckoutView> {
 
   @override
   void initState() {
+    returnURL = widget.returnURL;
+    cancelURL = widget.cancelURL;
+    
     services = PaypalServices(
       sandboxMode: widget.sandboxMode!,
       clientId: widget.clientId!,
@@ -116,6 +121,7 @@ class PaypalCheckoutViewState extends State<PaypalCheckoutView> {
                   return NavigationActionPolicy.CANCEL;
                 }
                 if (url.toString().contains(cancelURL)) {
+                  widget.onCancel();
                   return NavigationActionPolicy.CANCEL;
                 } else {
                   return NavigationActionPolicy.ALLOW;

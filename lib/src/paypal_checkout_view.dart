@@ -11,6 +11,8 @@ class PaypalCheckoutView extends StatefulWidget {
   final Widget? loadingIndicator;
   final List? transactions;
   final bool? sandboxMode;
+  final String returnURL;
+  final String cancelURL;
   const PaypalCheckoutView({
     Key? key,
     required this.onSuccess,
@@ -19,6 +21,8 @@ class PaypalCheckoutView extends StatefulWidget {
     required this.transactions,
     required this.clientId,
     required this.secretKey,
+    required this.returnURL,
+    required this.cancelURL,
     this.sandboxMode = false,
     this.note = '',
     this.loadingIndicator,
@@ -41,9 +45,6 @@ class PaypalCheckoutViewState extends State<PaypalCheckoutView> {
   late PaypalServices services;
   int pressed = 0;
   double progress = 0;
-  final String returnURL =
-      'https://www.youtube.com/channel/UC9a1yj1xV2zeyiFPZ1gGYGw';
-  final String cancelURL = 'https://www.facebook.com/tharwat.samy.9';
 
   late InAppWebViewController webView;
 
@@ -53,7 +54,7 @@ class PaypalCheckoutViewState extends State<PaypalCheckoutView> {
       "payer": {"payment_method": "paypal"},
       "transactions": widget.transactions,
       "note_to_payer": widget.note,
-      "redirect_urls": {"return_url": returnURL, "cancel_url": cancelURL}
+      "redirect_urls": {"return_url": widget.returnURL, "cancel_url": widget.cancelURL}
     };
     return temp;
   }
